@@ -1,0 +1,56 @@
+import speech_recognition as sr
+import pyttsx3
+import webbrowser
+import datetime
+
+# Initialize the recognizer and TTS engine
+recognizer = sr.Recognizer()
+engine = pyttsx3.init()
+
+# Function to make the assistant speak
+def speak(text):
+    engine.say(text)
+    engine.runAndWait()
+      
+# Function to listen and recognize voice commands
+def listen_command():
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = recognizer.listen(source)
+        
+        try:
+            print("Recognizing...")
+            command = recognizer.recognize_google(audio)
+            print(f"You said: {command}")
+        except:
+            print("Sorry, I could not understand. Please try again.")
+            return "None"
+        
+        return command.lower()
+
+# Main function for the voice assistant
+def voice_assistant():
+    speak("How can I help you?")
+    
+    while True:
+        command = listen_command()
+
+        if 'time' in command:
+            current_time = datetime.datetime.now().strftime("%H:%M:%S")
+            speak(f"The time is {current_time}")
+        
+        elif 'open youtube' in command:
+            speak("Opening YouTube")
+            webbrowser.open("https://www.youtube.com")
+        
+        elif 'open google' in command:
+            speak("Opening Google")
+            webbrowser.open("https://www.google.com")
+
+        elif 'exit' in command or 'quit' in command:
+            speak("Goodbye!")
+            break
+
+# Start the voice assistant
+if __name__ == "__main__":
+    voice_assistant()
